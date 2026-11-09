@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Escalón · Bitácora de ventas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf8f4;--surface:#fff;--text:#1b2430;--muted:#5b6675;--border:#e6e1d8;--primary:#0f766e;--primary-h:#115e59;--on-primary:#fff;--accent:#d97706;--ok:#15803d;--bad:#b91c1c;--tint:rgba(15,118,110,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1720;--surface:#17212b;--text:#eef2f6;--muted:#9aa7b5;--border:#263341;--primary:#2dd4bf;--primary-h:#5eead4;--on-primary:#06241f;--accent:#fbbf24;--ok:#4ade80;--bad:#f87171;--tint:rgba(45,212,191,.1)}}
+:root[data-theme="dark"]{--bg:#0f1720;--surface:#17212b;--text:#eef2f6;--muted:#9aa7b5;--border:#263341;--primary:#2dd4bf;--primary-h:#5eead4;--on-primary:#06241f;--accent:#fbbf24;--ok:#4ade80;--bad:#f87171;--tint:rgba(45,212,191,.1)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.55 'Inter',system-ui,sans-serif}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif;letter-spacing:-.01em;line-height:1.2}
+.wrap{max-width:960px;margin:0 auto;padding:16px 20px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0 12px}
+.logo{display:flex;align-items:center;gap:10px;font:700 1.25rem 'Fraunces',Georgia,serif}
+input,select,textarea{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 12px;min-width:0;width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--tint)}
+textarea{min-height:60px;resize:vertical}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.tab{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:8px 16px;font:500 .9rem 'Inter',sans-serif;cursor:pointer}
+.tab.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.btn{font:600 .9rem 'Inter',sans-serif;border-radius:10px;padding:10px 18px;cursor:pointer;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary)}
+.btn.o{background:transparent;color:var(--primary)}.btn:active{transform:scale(.97)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.card h2{font-size:1.15rem;margin-bottom:8px}
+.sub{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lbl{display:block;font-size:.76rem;color:var(--muted);margin-bottom:3px}
+.bar{height:10px;border-radius:999px;background:var(--border);overflow:hidden;margin:4px 0 12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;transition:width .4s}
+.row{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:.93rem;cursor:pointer}
+.chk input{width:18px;height:18px;margin-top:3px;flex:none;accent-color:var(--primary)}
+.chk.done span{color:var(--muted);text-decoration:line-through}
+.item{border-top:1px solid var(--border);padding:12px 0}
+.x{background:none;border:none;color:var(--bad);cursor:pointer;font-size:1.2rem}
+.badge{font-size:.72rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--tint);color:var(--primary)}
+.rt{font-size:.82rem;color:var(--muted)}
+.empty{color:var(--muted);font-size:.9rem}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:11px 20px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:50}
+@media (max-width:720px){.g2{grid-template-columns:1fr}.g5{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div class="logo"><svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--primary)"/><path d="M7 24h6v-5h6v-5h6" fill="none" stroke="var(--on-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>Bitácora de ventas</div><button class="btn o" id="themeBtn" type="button">Modo oscuro</button></div>
+<nav class="tabs" id="tabs"></nav>
+<main id="main"></main>
+</div>
+<script>
+const KEY='escalon_bitacora_v1';
+let S={checks:{},exps:[],funnel:[],talks:[]},tab='embudo';
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const val=id=>document.getElementById(id).value;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+const TABS=[['embudo','Embudo'],['exps','Experimentos'],['talks','Conversaciones'],['plan','Plan de 8 semanas']];
+const PLAN=[
+['Semana 0 · Preparación',['Añadir la casilla de consentimiento al formulario','Crear un correo solo para el proyecto','Completar los datos pendientes de la página legal','Poner el enlace de la lista de fundadores en tus perfiles']],
+['Semanas 1–2 · Escuchar',['Hablar con 15 personas de tu público (10 a 15 minutos cada una)','Mostrar la herramienta a 5 de ellas mientras la usan','Anotar cada conversación en la pestaña Conversaciones','Elegir 1 canal principal para publicar']],
+['Semanas 3–4 · Contenido',['Publicar 2 piezas útiles por semana (un consejo, un ejemplo con números)','Responder preguntas en comunidades de finanzas respetando sus reglas','Invitar a cada persona entrevistada a la lista de fundadores','Registrar visitas y correos en el Embudo cada semana']],
+['Semanas 5–6 · Probar',['Lanzar el primer experimento (un solo cambio a la vez)','Enviar un correo a la lista con una historia o caso práctico','Preguntar a quien se anotó qué le haría comprar','Documentar el resultado y el aprendizaje']],
+['Semanas 7–8 · Abrir ventas (requiere tener el cobro listo)',['Abrir las compras de fundador a la lista','Hacer seguimiento uno a uno a quien mostró interés alto','Revisar el Embudo: ¿dónde se pierde más gente?','Decidir el siguiente experimento con los datos']],
+['Fase 3 · Cobro y acceso (en paralelo)',['Comprobar disponibilidad del nombre, el dominio y la marca','Comprar el dominio','Crear cuenta en un hosting estático gratuito y conectar el dominio','Crear cuenta en Polar y revisar que su política admita educación financiera','Completar la verificación y los datos de pago en Polar','Crear los 3 productos con clave de licencia y límite de activaciones','Hacer una compra de prueba en el modo de pruebas','Probar la activación de la clave en el sitio publicado','Pasar a producción y hacer una compra real pequeña']]];
+const STARTERS=[
+['Mostrar la herramienta gratis antes de pedir el correo aumenta los registros','Orden de la página: herramienta primero, formulario después','Porcentaje de visitantes que dejan su correo'],
+['Un precio de fundador de $29 para el paquete vende más compras que uno de $39','Precio del paquete completo','Compras por cada 100 visitas'],
+['Un titular sobre “no abrumarte” atrae más clics que uno sobre “ordenar tu dinero”','Titular de la portada','Porcentaje de visitantes que hacen clic en probar gratis']];
+function setTab(t){tab=t;render()}
+function tabsH(){document.getElementById('tabs').innerHTML=TABS.map(t=>`<button class="tab${tab===t[0]?' on':''}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join('')}
+// EMBUDO
+const ST=[['visitas','Visitas'],['herr','Usaron la herramienta'],['correos','Correos'],['pago','Llegaron a pagar'],['compras','Compras']];
+const GOAL={visitas:500,herr:100,correos:50,compras:10};
+function addWeek(){const o={sem:val('fS').trim()};if(!o.sem)return toast('Ponle nombre a la semana');ST.forEach(s=>o[s[0]]=Math.max(0,Number(val('f_'+s[0]))||0));S.funnel.push(o);save();render()}
+function delRow(k,i){S[k].splice(i,1);save();render()}
+function funnelV(){
+  const T={};ST.forEach(s=>T[s[0]]=S.funnel.reduce((t,r)=>t+(r[s[0]]||0),0));
+  const pct=(a,b)=>b>0?(a/b*100).toFixed(1)+'%':'—';
+  const bars=Object.keys(GOAL).map(k=>{const p=Math.min(100,Math.round(T[k]/GOAL[k]*100));return `<div class="row rt"><span>${ST.find(s=>s[0]===k)[1]}</span><span>${T[k]} de ${GOAL[k]}</span></div><div class="bar"><i style="width:${p}%"></i></div>`}).join('');
+  const rows=S.funnel.map((r,i)=>`<div class="item"><div class="row"><b>${esc(r.sem)}</b><button class="x" onclick="delRow('funnel',${i})" aria-label="Quitar">×</button></div><div class="rt">${ST.map(s=>s[1]+': '+r[s[0]]).join(' · ')}</div></div>`).join('')||'<div class="empty">Aún no hay semanas registradas.</div>';
+  return `<div class="card"><h2>Meta de los primeros 60 días</h2><p class="sub">10 compradores, apoyados en 500 visitas, 100 personas que prueban la herramienta y 50 correos.</p>${bars}
+  <div class="g2"><div class="rt">Visitas → herramienta: <b>${pct(T.herr,T.visitas)}</b></div><div class="rt">Herramienta → correo: <b>${pct(T.correos,T.herr)}</b></div><div class="rt">Correo → compra: <b>${pct(T.compras,T.correos)}</b></div><div class="rt">Visitas → compra: <b>${pct(T.compras,T.visitas)}</b></div></div></div>
+  <div class="card"><h2>Registrar una semana</h2><label class="lbl">Semana</label><input id="fS" placeholder="Ej: Semana 3" maxlength="30" style="margin-bottom:10px"><div class="g5">${ST.map(s=>`<div><label class="lbl">${s[1]}</label><input id="f_${s[0]}" type="number" min="0" placeholder="0"></div>`).join('')}</div><button class="btn" style="margin-top:12px" onclick="addWeek()">Guardar semana</button></div>
+  <div class="card"><h2>Historial</h2>${rows}<p class="rt" style="margin-top:10px">Dónde se pierde más gente entre una etapa y la siguiente te dice qué arreglar primero.</p></div>`}
+// EXPERIMENTOS
+function addExp(h,c,m){h=h||val('eH').trim();if(!h)return toast('Escribe la hipótesis');S.exps.push({h,c:c||val('eC').trim(),m:m||val('eM').trim(),st:'Planeado',r:'',a:''});save();render()}
+function setExp(i,k,v){S.exps[i][k]=v;save()}
+function starters(){STARTERS.forEach(s=>S.exps.push({h:s[0],c:s[1],m:s[2],st:'Planeado',r:'',a:''}));save();render()}
+function expsV(){
+  const l=S.exps.map((e,i)=>`<div class="item"><div class="row"><b style="font-size:.95rem">${esc(e.h)}</b><button class="x" onclick="delRow('exps',${i})" aria-label="Quitar">×</button></div><div class="rt">Cambio: ${esc(e.c)||'—'} · Métrica: ${esc(e.m)||'—'}</div>
+  <div class="g2" style="margin-top:8px"><div><label class="lbl">Estado</label><select onchange="setExp(${i},'st',this.value)">${['Planeado','En curso','Terminado'].map(o=>`<option${e.st===o?' selected':''}>${o}</option>`).join('')}</select></div><div><label class="lbl">Resultado (con números)</label><input value="${esc(e.r)}" onchange="setExp(${i},'r',this.value)"></div></div>
+  <label class="lbl" style="margin-top:8px">¿Qué aprendiste y qué harás ahora?</label><textarea onchange="setExp(${i},'a',this.value)">${esc(e.a)}</textarea></div>`).join('')||`<div class="empty">Aún no hay experimentos.</div><button class="btn o" style="margin-top:10px" onclick="starters()">Cargar 3 experimentos de ejemplo</button>`;
+  return `<div class="card"><h2>Nuevo experimento</h2><p class="sub">Cambia una sola cosa por ciclo y mide una sola métrica.</p><label class="lbl">Hipótesis</label><input id="eH" placeholder="Creo que… porque…" style="margin-bottom:8px"><div class="g2"><div><label class="lbl">Qué cambias</label><input id="eC"></div><div><label class="lbl">Qué mides</label><input id="eM"></div></div><button class="btn" style="margin-top:12px" onclick="addExp()">Agregar</button></div><div class="card"><h2>Experimentos</h2>${l}</div>`}
+// CONVERSACIONES
+function addTalk(){const w=val('tW').trim();if(!w)return toast('Escribe con quién hablaste (iniciales o descripción)');S.talks.push({w,ch:val('tC').trim(),pain:val('tP').trim(),obj:val('tO').trim(),res:val('tR'),d:new Date().toLocaleDateString('es')});save();render()}
+function talksV(){
+  const n=S.talks.length,c=k=>S.talks.filter(t=>t.res===k).length;
+  const l=S.talks.slice().reverse().map(t=>{const i=S.talks.indexOf(t);return `<div class="item"><div class="row"><b>${esc(t.w)} <span class="badge">${esc(t.res)}</span></b><button class="x" onclick="delRow('talks',${i})" aria-label="Quitar">×</button></div><div class="rt">${esc(t.d)}${t.ch?' · '+esc(t.ch):''}</div>${t.pain?`<p style="font-size:.9rem;margin-top:4px"><b>Le cuesta:</b> ${esc(t.pain)}</p>`:''}${t.obj?`<p style="font-size:.9rem"><b>Objeción:</b> ${esc(t.obj)}</p>`:''}</div>`}).join('')||'<div class="empty">Aún no hay conversaciones.</div>';
+  return `<div class="card"><h2>Conversaciones: ${n} de 15</h2><div class="bar"><i style="width:${Math.min(100,Math.round(n/15*100))}%"></i></div><div class="rt">Interesadas: ${c('Interesada')} · Se anotaron: ${c('Se anotó')} · Compraron: ${c('Compró')} · No interesadas: ${c('No interesada')}</div></div>
+  <div class="card"><h2>Registrar una conversación</h2><p class="sub">Usa iniciales o una descripción; no guardes datos sensibles. Anota las palabras que usó la persona.</p>
+  <div class="g2"><div><label class="lbl">Con quién hablaste</label><input id="tW" maxlength="40"></div><div><label class="lbl">Canal</label><input id="tC" placeholder="WhatsApp, en persona…" maxlength="40"></div></div>
+  <label class="lbl" style="margin-top:8px">¿Qué le cuesta de sus finanzas? (con sus palabras)</label><textarea id="tP"></textarea>
+  <div class="g2" style="margin-top:8px"><div><label class="lbl">Principal objeción o duda</label><input id="tO"></div><div><label class="lbl">Resultado</label><select id="tR"><option>Interesada</option><option>Se anotó</option><option>Compró</option><option>No interesada</option></select></div></div><button class="btn" style="margin-top:12px" onclick="addTalk()">Guardar</button></div>
+  <div class="card"><h2>Historial</h2>${l}</div>`}
+// PLAN
+function chk(k){S.checks[k]=!S.checks[k];save();render()}
+function planV(){
+  let tot=0,done=0;
+  const b=PLAN.map((w,wi)=>`<div class="card"><h2>${w[0]}</h2>${w[1].map((t,ti)=>{const k=wi+'_'+ti;tot++;if(S.checks[k])done++;return `<label class="chk${S.checks[k]?' done':''}"><input type="checkbox"${S.checks[k]?' checked':''} onchange="chk('${k}')"><span>${t}</span></label>`}).join('')}</div>`).join('');
+  const p=Math.round(done/tot*100);
+  return `<div class="card"><h2>Tu plan: ${p}% completado</h2><div class="bar"><i style="width:${p}%"></i></div><p class="sub" style="margin:0">Es una guía, no un guion: ajusta las semanas a tu ritmo y anota lo que aprendas en Experimentos.</p></div>${b}`}
+// DATOS
+function dataV(){return `<div class="card"><h2>Respaldo de tus datos</h2><p class="sub">Todo se guarda solo en este navegador. Respalda tu bitácora de vez en cuando.</p><div class="row" style="justify-content:flex-start"><button class="btn o" onclick="expo()">Exportar</button><button class="btn o" onclick="impo()">Importar</button></div><textarea id="io" style="margin-top:10px" placeholder="Aquí aparece tu respaldo. Para importar, pega el texto y pulsa Importar."></textarea></div>`}
+function expo(){const b=document.getElementById('io');b.value=JSON.stringify(S);b.select();try{navigator.clipboard.writeText(b.value).then(()=>toast('Copiado'),()=>toast('Copia el texto manualmente'))}catch(e){toast('Copia el texto manualmente')}}
+function impo(){try{const p=JSON.parse(val('io'));if(!p||typeof p!=='object')throw 0;S=Object.assign({checks:{},exps:[],funnel:[],talks:[]},p);save();render();toast('Importado')}catch(e){toast('Texto no válido')}}
+function render(){tabsH();document.getElementById('main').innerHTML=({embudo:funnelV,exps:expsV,talks:talksV,plan:planV})[tab]()+dataV()}
+const root=document.documentElement,btn=document.getElementById('themeBtn');
+const isDark=()=>root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+const lab=()=>{btn.textContent=isDark()?'Modo claro':'Modo oscuro'};
+try{const t=localStorage.getItem('escalon_theme');if(t)root.dataset.theme=t}catch(e){}
+lab();btn.onclick=()=>{root.dataset.theme=isDark()?'light':'dark';try{localStorage.setItem('escalon_theme',root.dataset.theme)}catch(e){}lab()};
+render();
+</script>
+</body>
+</html>
